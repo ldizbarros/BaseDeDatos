@@ -1,4 +1,4 @@
-package basededatos;
+package basededatos.datos;
 
 import java.sql.*;
 import java.util.ArrayList;

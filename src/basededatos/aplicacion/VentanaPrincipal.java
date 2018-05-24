@@ -1,37 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package basededatos.aplicacion;
 
-import basededatos.ConexionBD;
-import basededatos.Usuario;
-import java.util.ArrayList;
-import java.util.Iterator;
+import basededatos.datos.Usuario;
+import basededatos.metodos.Metodos;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author ldizbarros
- */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form VentanaPrincipal
-     */
-    
     DefaultTableModel tabla = new DefaultTableModel();
     public VentanaPrincipal() {
         initComponents();
         jB_GuardarCambios.setVisible(false);
-        tabla.addColumn("ID");
-        tabla.addColumn("NOMBRE");
-        tabla.addColumn("APELLIDOS");
-        tabla.addColumn("FECHA NACIMIENTO");
-        tabla.addColumn("TELEFONO");
-        jTableUsuarios.setModel(tabla);
     }
 
     /**
@@ -153,14 +132,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabelNOMBRE)
                     .addComponent(jLabelAPELLIDO)
                     .addComponent(jBVer))
-                .addGap(24, 24, 24)
                 .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTF_TELEFONO, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTF_APELLIDOS, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTF_NOMBRE, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTF_FECHA, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTF_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jB_Borrar))
+                    .addGroup(jPanelLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTF_TELEFONO, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTF_APELLIDOS, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTF_NOMBRE, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTF_FECHA, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTF_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jB_Borrar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jB_Modificar)
@@ -236,26 +219,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             tabla.removeRow(i);
             i-=1;
         }
-        ArrayList usuarios = ConexionBD.mostrarUsuarios();
-        Iterator it = usuarios.iterator();
-        while(it.hasNext()){
-            Usuario usu = (Usuario) it.next();
-            String[] fila = new String[5];
-            fila[0] = String.valueOf(usu.getId());
-            fila[1] = usu.getNombre();
-            fila[2] = usu.getApellidos();
-            fila[3] = String.valueOf(usu.getFechaNaciemiento());
-            fila[4] = String.valueOf(usu.getTelefono());
-            tabla.addRow(fila);
-            jTableUsuarios.setModel(tabla);
-        }
+        jTableUsuarios.setModel(Metodos.mostrarUsuarios(Metodos.crearArrayList("mostrarUsuarios", "")));
     }//GEN-LAST:event_jBVerActionPerformed
 
     private void jBAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAñadirActionPerformed
-        Usuario usuario = new Usuario(Integer.parseInt(jTF_ID.getText()),jTF_NOMBRE.getText(),jTF_APELLIDOS.getText(),
-                jTF_FECHA.getText(),Integer.parseInt(jTF_TELEFONO.getText()));
-        ConexionBD.añadirUsuario(usuario);
-        
+        Metodos.crearUsuario(jTF_ID.getText(), jTF_NOMBRE.getText(), jTF_APELLIDOS.getText(), jTF_FECHA.getText(), jTF_TELEFONO.getText());
+               
         jTF_ID.setText("");
         jTF_NOMBRE.setText("");
         jTF_APELLIDOS.setText("");
@@ -266,73 +235,32 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             tabla.removeRow(i);
             i-=1;
         }
-        ArrayList usuarios = ConexionBD.mostrarUsuarios();
-        Iterator it = usuarios.iterator();
-        while(it.hasNext()){
-            Usuario usu = (Usuario) it.next();
-            String[] fila = new String[5];
-            fila[0] = String.valueOf(usu.getId());
-            fila[1] = usu.getNombre();
-            fila[2] = usu.getApellidos();
-            fila[3] = String.valueOf(usu.getFechaNaciemiento());
-            fila[4] = String.valueOf(usu.getTelefono());
-            tabla.addRow(fila);
-            jTableUsuarios.setModel(tabla);
-        }
+        jTableUsuarios.setModel(Metodos.mostrarUsuarios(Metodos.crearArrayList("mostrarUsuarios", "")));
     }//GEN-LAST:event_jBAñadirActionPerformed
 
     private void jB_BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_BorrarActionPerformed
         try{
             int id = Integer.parseInt(String.valueOf(jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), jTableUsuarios.getSelectedColumn())));
-            ConexionBD.borrarUsuario(id);
+            Metodos.borrarUsuario(id);
             for (int i=0; i<tabla.getRowCount();i++){
                 tabla.removeRow(i);
                 i-=1;
             }
-            ArrayList usuarios = ConexionBD.mostrarUsuarios();
-            Iterator it = usuarios.iterator();
-            while(it.hasNext()){
-                Usuario usu = (Usuario) it.next();
-                String[] fila = new String[5];
-                fila[0] = String.valueOf(usu.getId());
-                fila[1] = usu.getNombre();
-                fila[2] = usu.getApellidos();
-                fila[3] = String.valueOf(usu.getFechaNaciemiento());
-                fila[4] = String.valueOf(usu.getTelefono());
-                tabla.addRow(fila);
-                jTableUsuarios.setModel(tabla);
-            }
+            jTableUsuarios.setModel(Metodos.mostrarUsuarios(Metodos.crearArrayList("mostrarUsuarios", "")));
         }catch(ArrayIndexOutOfBoundsException ex){
             JOptionPane.showMessageDialog(rootPane, "No has selecionado un usuario");
         }   
     }//GEN-LAST:event_jB_BorrarActionPerformed
 
     private void jB_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_BuscarActionPerformed
-        for (int i=0; i<tabla.getRowCount();i++){
-            tabla.removeRow(i);
-            i-=1;
-        }
         if (jTF_Busqueda.getText().equalsIgnoreCase("")){
             JOptionPane.showMessageDialog(rootPane, "No se ha introducido ninguna busqueda");
         }else{
-            ArrayList usuarios = ConexionBD.busqueda(jTF_Busqueda.getText());
-            if (usuarios.isEmpty()){
-                JOptionPane.showMessageDialog(rootPane, "No se han encontrado coincidencias");
+            for (int i=0; i<tabla.getRowCount();i++){
+                tabla.removeRow(i);
+                i-=1;
             }
-            else{
-                Iterator it = usuarios.iterator();
-                while(it.hasNext()){
-                    Usuario usu = (Usuario) it.next();
-                    String[] fila = new String[5];
-                    fila[0] = String.valueOf(usu.getId());
-                    fila[1] = usu.getNombre();
-                    fila[2] = usu.getApellidos();
-                    fila[3] = String.valueOf(usu.getFechaNaciemiento());
-                    fila[4] = String.valueOf(usu.getTelefono());
-                    tabla.addRow(fila);
-                    jTableUsuarios.setModel(tabla);
-                }
-            }
+            jTableUsuarios.setModel(Metodos.mostrarUsuarios(Metodos.crearArrayList("buscarUsuarios", jTF_Busqueda.getText())));
         }
     }//GEN-LAST:event_jB_BuscarActionPerformed
 
@@ -340,7 +268,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         try{
             jB_GuardarCambios.setVisible(true);
             int id = Integer.parseInt(String.valueOf(jTableUsuarios.getValueAt(jTableUsuarios.getSelectedRow(), jTableUsuarios.getSelectedColumn())));
-            Usuario us = ConexionBD.buscarUsuario(id);
+            Usuario us = Metodos.buscarUsuario(id);
             jTF_ID.setText(String.valueOf(us.getId()));
             jTF_ID.setEditable(false);
             jTF_NOMBRE.setText(us.getNombre());
@@ -353,26 +281,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jB_ModificarActionPerformed
 
     private void jB_GuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarCambiosActionPerformed
-        Usuario nuevo = new Usuario(Integer.parseInt(jTF_ID.getText()),jTF_NOMBRE.getText(),jTF_APELLIDOS.getText(),
-            jTF_FECHA.getText(), Integer.parseInt(jTF_TELEFONO.getText()));
-        ConexionBD.modificarUsuario(nuevo);
+        Metodos.modificarUsuario(jTF_ID.getText(), jTF_NOMBRE.getText(), jTF_APELLIDOS.getText(), jTF_FECHA.getText(), jTF_TELEFONO.getText());
         for (int i=0; i<tabla.getRowCount();i++){
-                tabla.removeRow(i);
-                i-=1;
+            tabla.removeRow(i);
+            i-=1;
         }
-        ArrayList usuarios = ConexionBD.mostrarUsuarios();
-        Iterator it = usuarios.iterator();
-        while(it.hasNext()){
-            Usuario usu = (Usuario) it.next();
-            String[] fila = new String[5];
-            fila[0] = String.valueOf(usu.getId());
-            fila[1] = usu.getNombre();
-            fila[2] = usu.getApellidos();
-            fila[3] = String.valueOf(usu.getFechaNaciemiento());
-            fila[4] = String.valueOf(usu.getTelefono());
-            tabla.addRow(fila);
-            jTableUsuarios.setModel(tabla);
-        }
+        jTableUsuarios.setModel(Metodos.mostrarUsuarios(Metodos.crearArrayList("mostrarUsuarios", "")));
     }//GEN-LAST:event_jB_GuardarCambiosActionPerformed
 
     /**

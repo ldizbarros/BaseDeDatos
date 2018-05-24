@@ -1,6 +1,4 @@
-package basededatos;
-
-import java.sql.Date;
+package basededatos.datos;
 
 public class Usuario {
     private int id;
